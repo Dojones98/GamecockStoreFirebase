@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title> Order: {{ order.orderID }}</ion-title>
+        <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item>
+      <ion-title>Order ID: {{ order.orderID }}</ion-title>
+    </ion-item>
+    <ion-item>
+      <ion-title># Items: {{ order.numItems }}</ion-title>
+    </ion-item>
+    <ion-item>
+      <ion-title>Total: {{ order.total }}</ion-title>
+    </ion-item>
+    <ion-item>
+      <ion-title>Date: {{ order.date }}</ion-title>
+    </ion-item>
+  </ion-list>
+</ion-content>

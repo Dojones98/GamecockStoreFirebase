@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Router} from '@angular/router';
 import { Validators, FormBuilder, FormControl, FormGroup } from '@angular/forms';
-
+import { AlertController } from '@ionic/angular';
 import { ProductService } from '../product.service';
 
 import { Events } from '@ionic/angular'
@@ -21,7 +21,8 @@ export class ProductDetailPage implements OnInit {
 
   constructor(private route: ActivatedRoute, 
               private router: Router,
-              public productService: ProductService) {
+              public productService: ProductService,
+              public atrCtrl: AlertController) {
               
                }
    
@@ -75,7 +76,29 @@ export class ProductDetailPage implements OnInit {
   goBack(){
     this.router.navigate(['tabs/product-list']);
   }
-
+  async showConfirmAlert() {
+    let alertConfirm = await this.atrCtrl.create({
+     
+      message: 'Are You Sure to delete this product?',
+      buttons: [
+        {
+          text: 'No',
+          role: 'cancel',
+          handler: () => {
+            console.log('No clicked');
+          }
+        },
+        {
+          text: 'Yes',
+          handler: () => {
+            console.log('Yes clicked');
+            this.deleteProduct();
+          }
+        }
+      ]
+    });
+    await alertConfirm.present();
+  }
 
 
     

@@ -47,8 +47,8 @@ export class ProductDetailPage implements OnInit {
   order() {
     console.log(this.total);
     if(this.productService.usertype == 'visitor') {
-         this.productService.addOrder(<number>this.current_product.price * 10,
-                                   10, this.current_product.name, Date());
+         this.productService.addOrder(<number>this.current_product.price * this.total,
+                                   this.total, this.current_product.name, Date());
 
 
     this.router.navigate(['tabs/product-list']);

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { ProductService } from '../product.service';
+import { ChangeDetectorRef } from '@angular/core'
 
 import * as firebase from 'firebase';
 
@@ -12,11 +13,13 @@ import * as firebase from 'firebase';
 export class OrderListPage implements OnInit {
 
   imgFile = "/assets/cover.png";
+  mySubscription: any;
 
 orders = [];
 
   constructor(
     private router: Router,
+    private changeRef: ChangeDetectorRef,
     public productService: ProductService
   ) {
     this.productService.getObservable().subscribe((data) => {
@@ -33,10 +36,12 @@ orders = [];
       this.productService.usertype = "visitor";
       console.log(this.productService);
     }
+    this.changeRef.detectChanges();
   }
+  
 
   goToOrder(order){
-  	console.log(order);
+    console.log(order);
   	this.router.navigate(["/order-detail", order]);
   }
 

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { ProductService, snapshotToArray } from '../product.service';
 
 import * as firebase from 'firebase';
@@ -13,6 +13,7 @@ export class ProductListPage implements OnInit {
   
 
   imgFile = "/assets/cover.png";
+  mySubscription: any;
 
   products = [];
 
@@ -22,19 +23,32 @@ export class ProductListPage implements OnInit {
   ) {
     this.productService.getObservable().subscribe((data) => {
       console.log('Data Received product list', data);
-      //this.products = this.productService.products;
+      this.products = this.productService.products;
       });
       
       this.products = this.productService.products;
+      this.router.routeReuseStrategy.shouldReuseRoute = function () {
+        return false;
+      };
+      this.mySubscription = this.router.events.subscribe((event) => {
+        if (event instanceof NavigationEnd) {
+          // Trick the Router into believing it's last link wasn't previously loaded
+          this.router.navigated = false;
+        }
+      });
    }
 
   ngOnInit() {
-    this.productService.setUsertype("visitor");
+    if(firebase.auth().currentUser == null) {
+      console.log("Current User is null")
+      this.productService.setUsertype("visitor");
+    }
     this.products = this.productService.getProducts();
     console.log(this.products.length);
-    if(this.productService.usertype == "undefined"){
-      this.productService.setUsertype("visitor");
-      console.log(this.productService);
+  }
+  ngOnDestroy() {
+    if (this.mySubscription) {
+      this.mySubscription.unsubscribe();
     }
   }
 
@@ -63,6 +77,7 @@ export class ProductListPage implements OnInit {
 
     //reset usertype to visitor
     this.productService.setUsertype("visitor");
+    this.productService.orders = [];
 }
 
 }

@@ -32,15 +32,16 @@ export class AddProductPage implements OnInit {
     if (this.productService.usertype != "owner") {
       console.log("you are not an owner, you can not add anything.");
       console.log(this.productService.usertype);
-      this.goBack();
     } else {
     this.productService.addProduct(value.name, value.price, value.category, value.photoUrl, value.description);
-    this.goBack();
     }
+    this.goBack();
   }
 
   goBack(){
-    this.router.navigate(['tabs/product-list']);
+    this.router.navigate(['tabs/product-list']);//.then(()=> {
+     // window.location.reload();
+    //});
   }
 
 }

@@ -13,6 +13,7 @@ import { ProductService } from '../product.service';
 import * as firebase from 'firebase';
 
 
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -40,6 +41,12 @@ new_item_form: FormGroup;
       password: new FormControl('', Validators.required)
     });
 
+  }
+
+  home(){
+    this.router.navigate(["/tabs/product-list"]).then(() => {
+      window.location.reload();
+    })
   }
 
   signup(){
@@ -87,8 +94,8 @@ new_item_form: FormGroup;
 
 
         // firebase.auth().currentUser
-		  	// self.router.navigate(["/login"]);
-		  	self.router.navigate(["tabs/product-list"]);
+		  	 self.router.navigate(["tabs/product-list"]);
+		  //	this.home();
 	});
   }
 

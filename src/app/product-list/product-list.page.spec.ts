@@ -18,6 +18,12 @@ describe('ProductListPage', () => {
     fixture.detectChanges();
   }));
 
+  beforeEach(() => {
+    fixture = TestBed.createComponent(ProductListPage);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
   it('should create', () => {
     expect(component).toBeTruthy();
   });

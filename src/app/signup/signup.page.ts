@@ -50,7 +50,7 @@ export class SignupPage implements OnInit {
 		          
 		      })
 		      .then(function(docRef) {
-		          console.log("usertype written with ID: ", docRef.id);
+		          console.log("usetyper written with ID: ", docRef.id);
 
 		          //update this products arrays
 		      })
@@ -63,7 +63,7 @@ export class SignupPage implements OnInit {
 		  	console.log("finished creating account")
 		  	console.log(user.uid)
 		  	// self.router.navigate(["/login"]);
-		  	self.router.navigate(["tabs/product-list"]);
+		  	self.router.navigate(["/login"]);
 	});
 
 

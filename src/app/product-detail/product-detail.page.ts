@@ -45,10 +45,15 @@ export class ProductDetailPage implements OnInit {
 
 
   order() {
+    let dateObj = new Date();
+    var month = dateObj.getUTCMonth() + 1; //months from 1-12
+    var day = dateObj.getUTCDate();
+    var year = dateObj.getUTCFullYear();
+     var newdate = day + "/" + month + "/" + year;
     console.log(this.total);
     if(this.productService.usertype == 'visitor') {
          this.productService.addOrder(<number>this.current_product.price * this.total,
-                                   this.total, this.current_product.name, Date());
+                                   this.total, this.current_product.name, newdate);
 
 
     this.router.navigate(['tabs/product-list']);
@@ -70,6 +75,8 @@ export class ProductDetailPage implements OnInit {
   goBack(){
     this.router.navigate(['tabs/product-list']);
   }
+
+
 
     
   

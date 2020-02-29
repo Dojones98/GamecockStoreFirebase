@@ -62,12 +62,12 @@ export class ProductService {
          this.db.collection("orders").where("uid", "==", firebase.auth().currentUser.uid)
          .onSnapshot(function(querySnapshot){
           console.log("orders list changed...........1visitor");
-          //self.orders = [];
+          self.orders = [];
           querySnapshot.forEach(function(doc) {
               var order = doc.data();
               // console.log(doc.id)
               self.orders.push({total:order.total, numItems:order.numItems, 
-                                productName:order.productName, orderDate:order.date, uid:order.uid})
+                                productName:order.productName, orderDate:order.orderDate, uid:order.uid})
           });
            //self.events.publish('dataloaded,Date.now());
 
@@ -115,7 +115,7 @@ export class ProductService {
                   self.products.push({name:product.name, price:
                     product.price ,category:product.category, photoUrl:product.photoUrl, description:product.description, id:doc.id,uid:product.uid})
               });
-              // self.events.publish('dataloaded',Date.now());
+               //self.events.publish('dataloaded',Date.now());
               self.publishEvent({
                     foo: 'bar'
                 });
@@ -132,7 +132,7 @@ export class ProductService {
                var order = doc.data();
                // console.log(doc.id)
                self.orders.push({total:order.total, numItems:order.numItems, 
-                                 productName:order.productName, orderDate:order.date, uid:order.uid, id:doc.id})
+                                 productName:order.productName, orderDate:order.orderDate, uid:order.uid, id:doc.id})
            });
             //self.events.publish('dataloaded,Date.now());
  

@@ -24,9 +24,19 @@ orders = [];
   ) {
     this.productService.getObservable().subscribe((data) => {
       console.log('Data Received product list', data);
+      this.orders = this.productService.getOrders()
       });
       
       this.orders = this.productService.orders;
+      this.router.routeReuseStrategy.shouldReuseRoute = function () {
+        return false;
+      };
+      this.mySubscription = this.router.events.subscribe((event) => {
+        if (event instanceof NavigationEnd) {
+          // Trick the Router into believing it's last link wasn't previously loaded
+          this.router.navigated = false;
+        }
+      });
    }
 
   ngOnInit() {

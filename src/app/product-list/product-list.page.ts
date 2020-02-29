@@ -23,7 +23,7 @@ export class ProductListPage implements OnInit {
   ) {
     this.productService.getObservable().subscribe((data) => {
       console.log('Data Received product list', data);
-      this.products = this.productService.products;
+      this.products = this.productService.getProducts();
       });
       
       this.products = this.productService.products;

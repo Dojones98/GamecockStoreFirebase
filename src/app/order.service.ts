@@ -49,7 +49,8 @@ export class OrderService {
                  var order = doc.data();
                  // console.log(doc.id)
                  self.orders.push({total:order.total, numItems:order.numItems, 
-                                   productName:order.productName, orderDate:order.date, uid:order.uid})
+                                   productName:order.productName, orderDate:order.orderDate
+                                   , uid:order.uid})
              });
               //self.events.publish('dataloaded,Date.now());
  
@@ -68,7 +69,7 @@ export class OrderService {
              querySnapshot.forEach(function(doc) {
                  var order = doc.data();
                  self.orders.push({total:order.total, numItems:order.numItems, 
-                  productName:order.productName, orderDate:order.date, uid:order.uid})
+                  productName:order.productName, orderDate:order.orderDate, uid:order.uid})
              });
  
              self.publishEvent({

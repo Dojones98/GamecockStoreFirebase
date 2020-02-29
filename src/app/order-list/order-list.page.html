@@ -12,14 +12,36 @@
 
 <ion-content>
   <ion-list>
-    <ion-item *ngFor="let order of orders" (click)="goToOrder(order)">
-    
-      ID:  {{ order.orderID }} 
-      <ion-item>
-        <small>
-          Number Items: {{order.numItems}} Total: {{order.total}} Date: {{order.date}}
-        </small>
-      </ion-item>
+    <ion-item *ngFor="let order of (orders | async)" (click)="goToOrder(order)">
+    <ion-grid>
+      <ion-row>
+        <ion-col align-self: center>
+          <div><h1>
+           Product: {{order.productName}}
+          </h1></div>
+        </ion-col>
+        <ion-col align-self: center>
+          <div><h2>
+           Quantity: {{order.numItems}}
+          </h2></div>
+        </ion-col>
+        <ion-col align-self: center>
+          <div><h2>
+            ${{order.total}}
+          </h2></div>
+        </ion-col>
+        <ion-col align-self: center>
+          <div><h2>
+            {{order.orderDate}}
+          </h2></div>
+        </ion-col>
+        <ion-col align-self: center>
+          <div><h2>
+           UID {{order.uid}}
+          </h2></div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
     </ion-item>
   </ion-list>
 </ion-content>

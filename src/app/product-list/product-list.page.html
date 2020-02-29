@@ -7,39 +7,46 @@
       <ion-button (click) = "openAddProductPage()">
         <ion-icon slot = "icon-only" name= "add-circle"></ion-icon>
       </ion-button>
+      <ion-button (click)="login()" fill = "outline">
+        login
+      </ion-button>
+      <ion-button (click)="logout()" fill = "outline">
+        logout
+      </ion-button>
     </ion-buttons>
-    <ion-title color = "dark">
+    <ion-title color = "dark" size = "large">
      Gamecock Store
     </ion-title>
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <ion-img [src] = "imgFile"></ion-img>
+  User Type : {{this.productService.usertype}}   
+  <h4><ion-img [src] = "imgFile"></ion-img></h4>
   <ion-list>
-    <ion-item *ngFor="let product of products" (click)="goToProduct(product)">
+    <ion-item *ngFor="let product of (products | async)" (click)="goToProduct(product)">
     <ion-grid>
       <ion-row>
         <ion-col align-self: center>
-          <div>
-            <h1>{{product.name}}</h1>
-          </div>
+          <div><h1>
+            {{product.name}}
+          </h1></div>
         </ion-col>
         <ion-col align-self: center>
-          <div>
-            <h2>${{product.price}}</h2>
-          </div>
+          <div><h2>
+            ${{product.price}}
+          </h2></div>
         </ion-col>
         <ion-col align-self: center>
-          <div>
-            <h2>{{product.category}}</h2>
-          </div>
+          <div><h2>
+            {{product.category}}
+          </h2></div>
         </ion-col>
-        <ion-col>
-          <div style="align-self: end;">
+        <ion-col align-self-end>
+          <div><h3>
             <ion-thumbnail slot = "end">
-              <h3><ion-img [src] = "product.photoUrl" style="align-self: end;"></ion-img></h3>
+              <ion-img [src] = "product.photoUrl" style="align-self: end;"></ion-img>
             </ion-thumbnail>
-          </div>
+          </h3></div>
         </ion-col>
       </ion-row>
     </ion-grid>

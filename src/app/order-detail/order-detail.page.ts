@@ -17,6 +17,17 @@ export class OrderDetailPage implements OnInit {
     this.order = this.route.snapshot.params;
   }
 
+  deleteOrder(){
+    console.log(this.order);
+    console.log(this.order.id+" to be deleted")
+    this.order.deleteProduct(this.order.id)
+    this.goBack();
+  }
+
+  goBack(){
+    this.router.navigate(["/tabs/order-list"]);
+  }
+
 }
 
 

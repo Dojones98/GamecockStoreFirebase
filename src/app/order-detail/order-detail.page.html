@@ -3,6 +3,8 @@
     <ion-title> Order: {{ order.orderID }}</ion-title>
         <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
+      <ion-button (click)="deleteOrder()"> Delete Order
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { OrderService } from '../order.service';
+import { ProductService } from '../product.service';
+
+import * as firebase from 'firebase';
 
 @Component({
   selector: 'app-order-list',
@@ -9,24 +11,33 @@ import { OrderService } from '../order.service';
 })
 export class OrderListPage implements OnInit {
 
+  imgFile = "/assets/cover.png";
+
+orders = [];
+
   constructor(
     private router: Router,
-    public orderService: OrderService
-  ) {}
-  orders = [];
-    
+    public productService: ProductService
+  ) {
+    this.productService.getObservable().subscribe((data) => {
+      console.log('Data Received product list', data);
+      });
+      
+      this.orders = this.productService.orders;
+   }
 
   ngOnInit() {
-    this.orders = this.orderService.getOrders();
+    this.orders = this.productService.getOrders();
+    console.log(this.orders.length);
+    if(this.productService.usertype == "undefined"){
+      this.productService.usertype = "visitor";
+      console.log(this.productService);
+    }
   }
 
-  getOrders(order){
+  goToOrder(order){
   	console.log(order);
   	this.router.navigate(["/order-detail", order]);
-
-}
-  goToOrder(order) {
-    this.router.navigate(["/order-detail", order]);
-
   }
+
 }

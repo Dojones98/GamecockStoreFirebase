@@ -27,9 +27,9 @@ new_item_form: FormGroup;
   db = firebase.firestore();
 
   constructor(
-  	     private router: Router,
- 	 public formBuilder: FormBuilder,
- 	     public productService: ProductService
+  	  private router: Router,
+ 	    public formBuilder: FormBuilder,
+ 	    public productService: ProductService
  	     ) { 
 
   }

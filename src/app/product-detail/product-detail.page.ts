@@ -22,7 +22,8 @@ export class ProductDetailPage implements OnInit {
   constructor(private route: ActivatedRoute, 
               private router: Router,
               public productService: ProductService,
-              public atrCtrl: AlertController) {
+              public atrCtrl: AlertController,
+              private alertCtrl: AlertController) {
               
                }
    
@@ -67,10 +68,14 @@ export class ProductDetailPage implements OnInit {
   }
 
   deleteProduct(){
+    if(this.productService.usertype != "owner") {
+      this.deleteAlert();
+    } else {
     console.log(this.current_product);
     console.log(this.current_product.id+" to be deleted")
     this.productService.deleteProduct(this.current_product.id)
     this.goBack();
+    }
   }
 
   goBack(){
@@ -98,6 +103,18 @@ export class ProductDetailPage implements OnInit {
       ]
     });
     await alertConfirm.present();
+  }
+
+  async deleteAlert() {
+    let alert = await this.alertCtrl.create({
+      message: 'Sorry, only owners can delete a product. Please log in as an owner to delete your product.',
+      buttons: [{
+        text: 'Dismiss',
+        handler: () => {
+          console.log('No clicked');
+        }}]
+    });
+    await alert.present();
   }
 
 

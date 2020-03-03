@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { ProductService, snapshotToArray } from '../product.service';
+import { AlertController } from '@ionic/angular';
 
 import * as firebase from 'firebase';
 
@@ -11,19 +12,33 @@ import * as firebase from 'firebase';
 })
 export class ProductListPage implements OnInit {
   
-
   imgFile = "/assets/cover.png";
   mySubscription: any;
+  showLogout = null;
+  showLogin = null;
+  
 
   products = [];
 
   constructor(
     private router: Router,
-    public productService: ProductService
-  ) {
+    public productService: ProductService,
+    private alertCtrl: AlertController
+ ) {
+/*
+    if(this.productService.user == null) {
+      this.showLogin = true;
+      this.showLogout = false;
+    } else if (this.productService.user == null) {
+      this.showLogin = false;
+      this.showLogout = true;
+    }
+
+*/
     this.productService.getObservable().subscribe((data) => {
       console.log('Data Received product list', data);
       this.products = this.productService.getProducts();
+      
       });
       
       this.products = this.productService.products;
@@ -36,15 +51,26 @@ export class ProductListPage implements OnInit {
           this.router.navigated = false;
         }
       });
+
    }
 
   ngOnInit() {
-    if(firebase.auth().currentUser == null) {
+    if(this.productService.user == null) {
       console.log("Current User is null")
       this.productService.setUsertype("visitor");
     }
+    /*  this.showLogin = true;
+      this.showLogout = false;
+    } 
+    if (this.productService.user != null) {
+      this.showLogin = false;
+      this.showLogout = true;
+    }
+    */
+
     this.products = this.productService.getProducts();
     console.log(this.products.length);
+
   }
   ngOnDestroy() {
     if (this.mySubscription) {
@@ -59,13 +85,25 @@ export class ProductListPage implements OnInit {
   }
 
   openAddProductPage(){
+    if(this.productService.usertype != "owner"){
+      this.addProductError();
+    } else {
     this.router.navigate(["/add-product"]);
+    }
   }
 
   login(){
+   if(firebase.auth().currentUser != null){
+     this.presentLogin();
+   }  else {
    this.router.navigate(["/login"]);
+   }
  }
  logout(){
+  if(firebase.auth().currentUser == null){
+    this.presentLogout();
+  } else{
+
   var self=this;
   firebase.auth().signOut().then(function() {
   // Sign-out successful.
@@ -78,6 +116,47 @@ export class ProductListPage implements OnInit {
     //reset usertype to visitor
     this.productService.setUsertype("visitor");
     this.productService.orders = [];
+  }
 }
+
+async presentLogin() {
+  let alert = await this.alertCtrl.create({
+    message: 'Login Error: You are already logged in.',
+    buttons: [{
+      text: 'Dismiss',
+      handler: () => {
+        console.log('No clicked');
+      }}]
+  });
+  await alert.present();
+}
+
+
+async presentLogout() {
+  let alert = await this.alertCtrl.create({
+    message: 'Logout Error: You are not currently logged in.',
+    buttons: [{
+      text: 'Dismiss',
+      handler: () => {
+
+        console.log('No clicked');
+      }}]
+  });
+  await alert.present();
+}
+
+async addProductError() {
+  let alert = await this.alertCtrl.create({
+    message: 'You can not add a product as a visitor. Please log in as an owner to add a product.',
+    buttons: [{
+      text: 'Dismiss',
+      handler: () => {
+
+        console.log('No clicked');
+      }}]
+  });
+  await alert.present();
+}
+
 
 }

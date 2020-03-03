@@ -20,6 +20,7 @@ export class ProductService {
   db = firebase.firestore();
   public products:Array<any> = [];
   public orders:Array<any> = [];
+  user = null;
 
   //event notification
   publishEvent(data: any) {
@@ -33,7 +34,7 @@ export class ProductService {
   constructor(private storage: Storage,
     public router: Router,
     private events: Events) {
-      var user = firebase.auth().currentUser;
+      user = firebase.auth().currentUser;
       var self= this;
       
 
@@ -145,7 +146,7 @@ export class ProductService {
       }
    }
    else{
-     this.db.collection("products")
+     this.db.collection("products").where("uid", "==", firebase.auth().currentUser.uid)
     .onSnapshot(function(querySnapshot) {
           console.log("products list changed...........");
           self.products = [];
@@ -163,6 +164,10 @@ export class ProductService {
       } );
    }
   
+    }
+
+    getUserType(){
+      return this.usertype;
     }
      
 

@@ -51,7 +51,7 @@ export class ProductDetailPage implements OnInit {
     var month = dateObj.getUTCMonth() + 1; //months from 1-12
     var day = dateObj.getUTCDate();
     var year = dateObj.getUTCFullYear();
-     var newdate = day + "/" + month + "/" + year;
+     var newdate = month + "/" + day + "/" + year;
     console.log(this.total);
     if(this.productService.usertype == 'visitor') {
          this.productService.addOrder(<number>this.current_product.price * this.total,
@@ -62,6 +62,8 @@ export class ProductDetailPage implements OnInit {
 
   }
   else{
+    this.orderAlert();
+    
     console.log("you are not a visitor and can not place an order")
   }
   
@@ -84,7 +86,7 @@ export class ProductDetailPage implements OnInit {
   async showConfirmAlert() {
     let alertConfirm = await this.atrCtrl.create({
      
-      message: 'Are You Sure to delete this product?',
+      message: 'Are you sure you want to delete this product?',
       buttons: [
         {
           text: 'No',
@@ -108,6 +110,18 @@ export class ProductDetailPage implements OnInit {
   async deleteAlert() {
     let alert = await this.alertCtrl.create({
       message: 'Sorry, only owners can delete a product. Please log in as an owner to delete your product.',
+      buttons: [{
+        text: 'Dismiss',
+        handler: () => {
+          console.log('No clicked');
+        }}]
+    });
+    await alert.present();
+  }
+
+  async orderAlert() {
+    let alert = await this.alertCtrl.create({
+      message: 'Sorry, only visitors can place an order. Please sign in as a visitor to place your order.',
       buttons: [{
         text: 'Dismiss',
         handler: () => {

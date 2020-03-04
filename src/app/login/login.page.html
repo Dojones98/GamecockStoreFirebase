@@ -32,9 +32,12 @@ Signup      </ion-button>
     <ion-button class="submit-btn" expand="block" type="submit" [disabled]="!new_item_form.valid">Login</ion-button>
   </form>
 
+
+  <ion-item>
+    Note: Logging in with Google Authentication will automatically make your account a "visitor". In order to be an "owner" please signup without using Google Authentication and select "Owner" as the usertype.
+  </ion-item>
   <ion-item>
   	<ion-grid>
-  		<ion-button class="submit-btn" (click)="loginFacebook()">Facebook Login</ion-button>
   		<ion-button class="submit-btn" (click)="loginGoogle()">Google Login</ion-button>
   	</ion-grid>
   </ion-item>

@@ -40,10 +40,10 @@ export class OrderDetailPage implements OnInit {
     this.router.navigate(["/tabs/order-list"]);
   }
 
-  async showConfirmAlert() {
+  async deleteOrderHelper() {
     let alertConfirm = await this.atrCtrl.create({
      
-      message: 'Are You Sure to delete this order?',
+      message: 'Are you sure you want to delete this order?',
       buttons: [
         {
           text: 'No',

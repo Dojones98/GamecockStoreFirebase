@@ -13,8 +13,8 @@
 <ion-content>
   <h4><ion-img [src] =  current_product.photoUrl ></ion-img></h4>
   <ion-item>
-    <ion-range [(ngModel)]="total" min = "1" max = "100" color = "primary" step = "1" snap = "true" pin = "true">
-      <ion-label slot= "start">1</ion-label>
+    <ion-range [(ngModel)]="total" min = "0" max = "100" color = "primary" step = "1" snap = "true" pin = "true">
+      <ion-label slot= "start">0</ion-label>
       <ion-label slot = "end">100</ion-label>
     </ion-range>
   </ion-item>

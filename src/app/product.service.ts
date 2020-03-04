@@ -1,6 +1,7 @@
 import { Injectable, ChangeDetectorRef } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { Router } from '@angular/router';
+import { AlertController } from '@ionic/angular';
 
 import * as firebase from 'firebase';
 import { Observable, scheduled } from 'rxjs';
@@ -33,6 +34,7 @@ export class ProductService {
 
   constructor(private storage: Storage,
     public router: Router,
+    private alertCtrl: AlertController,
     private events: Events) {
       user = firebase.auth().currentUser;
       var self= this;
@@ -106,6 +108,26 @@ export class ProductService {
       var self=this;
       this.usertype= type;
       console.log("usertype set as: "+type);
+      if (type == "signout"){
+        this.db.collection("products")
+        .onSnapshot(function(querySnapshot) {
+              console.log("products list changed...........");
+              self.products = [];
+              querySnapshot.forEach(function(doc) {
+                  var product = doc.data();
+                  self.products.push({name:product.name, price:
+                    product.price ,category:product.category, photoUrl:product.photoUrl, description:product.description, id:doc.id,uid:product.uid})
+              });
+               //self.events.publish('dataloaded',Date.now());
+              self.publishEvent({
+                    foo: 'bar'
+                });
+              console.log("products reloaded");
+          } );
+          this.orders = [];
+      }
+
+
       if (this.usertype == "visitor"){
          this.db.collection("products")
         .onSnapshot(function(querySnapshot) {
@@ -122,6 +144,7 @@ export class ProductService {
                 });
               console.log("products reloaded");
           } );
+          self.orders = [];
 
           if((user != null)){
           self.orders = [];
@@ -253,6 +276,7 @@ return productsObservable;
      }
      else{
         console.log(" no user logged in, no order created")
+        this.presentNotVisitor();
      }
   
   
@@ -290,6 +314,21 @@ deleteOrder(id){
   } else {
     // YOU ARE NOT A VISITOR AND CANNOT DELETE AN ORDER
   }
+
+
+}
+
+async presentNotVisitor() {
+  let alert = await this.alertCtrl.create({
+    message: 'You are not logged in as a visitor and cannot place an order. Please log in as a visitor to place an order.',
+    buttons: [{
+      text: 'Dismiss',
+      handler: () => {
+
+        console.log('No clicked');
+      }}]
+  });
+  await alert.present();
 }
 
 }

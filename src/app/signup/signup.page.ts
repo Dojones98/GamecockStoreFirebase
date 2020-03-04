@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import * as firebase from 'firebase';
 import { Router,ActivatedRoute } from '@angular/router';
+import {AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-signup',
@@ -15,7 +16,10 @@ export class SignupPage implements OnInit {
 
   usertype="visitor";
 
-  constructor(private router:Router) { }
+  constructor(private router:Router,
+	private alertCtrl: AlertController) {
+	
+   }
 
   ngOnInit() {
   }
@@ -62,11 +66,24 @@ export class SignupPage implements OnInit {
 
 		  	console.log("finished creating account")
 		  	console.log(user.uid)
-		  	// self.router.navigate(["/login"]);
+			  // self.router.navigate(["/login"]);
+			  self.signUpNotification();
 		  	self.router.navigate(["/login"]);
 	});
 
 
+  }
+
+  async signUpNotification() {
+    let alert = await this.alertCtrl.create({
+      message: 'Thank you for signing up, please input your information again on the next page to log in.',
+      buttons: [{
+        text: 'Dismiss',
+        handler: () => {
+          console.log('No clicked');
+        }}]
+    });
+    await alert.present();
   }
 
 }

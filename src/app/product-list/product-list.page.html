@@ -20,7 +20,6 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  User Type : {{this.productService.usertype}}   
   <h4><ion-img [src] = "imgFile"></ion-img></h4>
   <ion-list>
     <ion-item *ngFor="let product of (products | async)" (click)="goToProduct(product)">

@@ -109,12 +109,13 @@ export class ProductListPage implements OnInit {
   // Sign-out successful.
   console.log("logout ok. Byebye")
   self.router.navigate(["/login"]);
+  self.productService.setUsertype("signout");
     }).catch(function(error) {
     // An error happened.
     });
 
     //reset usertype to visitor
-    this.productService.setUsertype("visitor");
+    //this.productService.setUsertype("visitor");
     this.productService.orders = [];
   }
 }

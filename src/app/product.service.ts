@@ -4,9 +4,10 @@ import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 
 import * as firebase from 'firebase';
-import { Observable, scheduled } from 'rxjs';
+import { Observable, scheduled, onErrorResumeNext } from 'rxjs';
 import {Subject} from 'rxjs';
 import { Events} from '@ionic/angular';
+import { OrderService } from './order.service';
 
 
 @Injectable({
@@ -21,6 +22,13 @@ export class ProductService {
   db = firebase.firestore();
   public products:Array<any> = [];
   public orders:Array<any> = [];
+  public cart:Array<any> = [];
+  public total_quantity;
+  public total_price;
+  public prices_string = "";
+  public quantities_string = "";
+  public products_string = "";
+
   user = null;
 
   //event notification
@@ -38,6 +46,8 @@ export class ProductService {
     private events: Events) {
       user = firebase.auth().currentUser;
       var self= this;
+      self.total_quantity = 0;
+      self.total_price = 0;
       
 
       if (this.usertype == "visitor"){
@@ -59,6 +69,10 @@ export class ProductService {
  
              console.log("products reloaded");
          } );
+//#############################################################
+//#############################################################
+//#############################################################
+
          var user = firebase.auth().currentUser;
          if((user != null)){
          self.orders = [];
@@ -80,7 +94,32 @@ export class ProductService {
 
           console.log("products reloaded");
       } );
+      self.cart = [];
+      this.db.collection("cart").where("uid", "==", firebase.auth().currentUser.uid)
+         .onSnapshot(function(querySnapshot){
+          console.log("orders list changed...........1visitor");
+          self.cart = [];
+          querySnapshot.forEach(function(doc) {
+           var cart = doc.data();
+           self.cart.push({total_price:cart.total_price, total_quantity:
+            cart.total_quantity ,orderDate:cart.orderDate, id:doc.id,uid:cart.uid})
+  
+       });
+        
+           //self.events.publish('dataloaded,Date.now());
+
+           self.publishEvent({
+              foo: 'bar'
+          });
+
+          console.log("products reloaded");
+      } );
+
     }
+//#############################################################
+//#############################################################
+//#############################################################
+
       }
       else{
         this.db.collection("products")
@@ -99,8 +138,24 @@ export class ProductService {
  
              console.log("products reloaded");
          } );
-         self.orders = [];
+         
+      self.publishEvent({
+          foo: 'bar'
+      });
+
+      console.log("products reloaded");
+      self.cart = [];
+      self.orders = [];
+ 
       }
+
+
+
+
+
+
+
+
      } //end of constructor
 
      setUsertype(type) {
@@ -125,6 +180,7 @@ export class ProductService {
               console.log("products reloaded");
           } );
           this.orders = [];
+          this.cart = [];
       }
 
 
@@ -145,9 +201,11 @@ export class ProductService {
               console.log("products reloaded");
           } );
           self.orders = [];
+          self.cart = [];
 
           if((user != null)){
           self.orders = [];
+          self.cart = [];
           this.db.collection("orders").where("uid", "==", firebase.auth().currentUser.uid)
           .onSnapshot(function(querySnapshot){
            console.log("orders list changed...........1visitor");
@@ -158,6 +216,8 @@ export class ProductService {
                self.orders.push({total:order.total, numItems:order.numItems, 
                                  productName:order.productName, orderDate:order.orderDate, uid:order.uid, id:doc.id})
            });
+
+           
             //self.events.publish('dataloaded,Date.now());
  
             self.publishEvent({
@@ -165,7 +225,31 @@ export class ProductService {
            });
  
            console.log("products reloaded");
-       } );
+       });
+       self.cart = [];
+       this.db.collection("cart").where("uid", "==", firebase.auth().currentUser.uid)
+          .onSnapshot(function(querySnapshot){
+           console.log("orders list changed...........1visitor");
+           self.cart = [];
+           querySnapshot.forEach(function(doc) {
+            var cart = doc.data();
+            self.cart.push({total_price:cart.total_price, total_quantity:
+             cart.total_quantity ,orderDate:cart.orderDate, id:doc.id,uid:cart.uid})
+
+        });
+         
+            //self.events.publish('dataloaded,Date.now());
+ 
+            self.publishEvent({
+               foo: 'bar'
+           });
+ 
+           console.log("products reloaded");
+       }
+       
+       //INSERT HERE ############################
+       
+       );
       }
    }
    else{
@@ -281,6 +365,78 @@ return productsObservable;
   
   
       }
+ 
+
+updateQuantityPrice(){
+  var self = this;
+  var uid=firebase.auth().currentUser.uid
+  self.total_price = 0;
+  self.total_quantity = 0;
+  this.db.collection("orders").where("uid", "==", firebase.auth().currentUser.uid)
+  .onSnapshot(function(querySnapshot){
+   querySnapshot.forEach(function(doc) {
+       var order = doc.data();
+       // console.log(doc.id)
+      self.updateTotalPrice(order.total);
+      self.updateTotalQuantity(order.numItems);
+   });
+   
+   
+    //self.events.publish('dataloaded,Date.now());
+
+    self.publishEvent({
+       foo: 'bar'
+   });
+
+   console.log("products reloaded");
+   console.log(self.total_price);
+});
+
+}
+
+updateTotalPrice(toAdd) {
+  this.total_price += <number>toAdd;
+  console.log(toAdd);
+  console.log(this.total_price);
+}
+
+updateTotalQuantity(toAdd) {
+  this.total_quantity += <number>toAdd;
+}
+
+pushCartToFirebase(orderDate, totalPrice, totalQuantity) {
+  var self = this;
+  var uid=firebase.auth().currentUser.uid
+    console.log(uid, " :****** uid");
+
+ var db = firebase.firestore();
+ db.collection("cart").add({
+   'total_price' : totalPrice,
+   'total_quantity' : totalQuantity,
+   'orderDate': orderDate,
+   'uid' : uid
+})
+.then(function(docRef) {
+ console.log("Document written with ID: ", docRef.id);
+ 
+ //update this products arrays
+})
+.catch(function(error) {
+ console.error("Error adding document: ", error);
+});
+
+
+
+}
+
+getCart():any{var cartObservable = new Observable(observer => {
+  setTimeout(() => {
+      observer.next(this.cart);
+  }, 1000);
+  });
+
+      return cartObservable;
+}
 
 deleteProduct(id){
   if(this.usertype == "owner") {

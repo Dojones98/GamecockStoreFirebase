@@ -59,19 +59,10 @@ export class ProductListPage implements OnInit {
       console.log("Current User is null")
       this.productService.setUsertype("visitor");
     }
-    /*  this.showLogin = true;
-      this.showLogout = false;
-    } 
-    if (this.productService.user != null) {
-      this.showLogin = false;
-      this.showLogout = true;
-    }
-    */
-
     this.products = this.productService.getProducts();
     console.log(this.products.length);
-
   }
+  
   ngOnDestroy() {
     if (this.mySubscription) {
       this.mySubscription.unsubscribe();

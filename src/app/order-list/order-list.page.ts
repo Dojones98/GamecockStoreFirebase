@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { ProductService } from '../product.service';
-import { ChangeDetectorRef } from '@angular/core'
+import { ChangeDetectorRef } from '@angular/core';
 
 import * as firebase from 'firebase';
 
@@ -17,6 +17,7 @@ export class OrderListPage implements OnInit {
 
 orders = [];
 
+
   constructor(
     private router: Router,
     private changeRef: ChangeDetectorRef,
@@ -24,19 +25,12 @@ orders = [];
   ) {
     this.productService.getObservable().subscribe((data) => {
       console.log('Data Received product list', data);
-      this.orders = this.productService.getOrders()
+      this.orders = this.productService.getOrders();
       });
       
       this.orders = this.productService.orders;
-      this.router.routeReuseStrategy.shouldReuseRoute = function () {
-        return false;
-      };
-      this.mySubscription = this.router.events.subscribe((event) => {
-        if (event instanceof NavigationEnd) {
-          // Trick the Router into believing it's last link wasn't previously loaded
-          this.router.navigated = false;
-        }
-      });
+
+   
    }
 
   ngOnInit() {
@@ -44,15 +38,43 @@ orders = [];
     console.log(this.orders.length);
     if(this.productService.usertype == "undefined"){
       this.productService.usertype = "visitor";
-      console.log(this.productService);
     }
-    this.changeRef.detectChanges();
   }
   
 
   goToOrder(order){
     console.log(order);
   	this.router.navigate(["/order-detail", order]);
+  }
+
+  order(){
+    var self = this;
+    var total = 0;
+
+    console.log(total);
+
+    
+    let dateObj = new Date();
+    var month = dateObj.getUTCMonth() + 1; //months from 1-12
+    var day = dateObj.getUTCDate();
+    var year = dateObj.getUTCFullYear();
+    var newdate = month + "/" + day + "/" + year;
+    console.log("Just before calling checkOut");
+    //self.productService.total_price = 0;
+    //self.productService.total_quantity = 0;
+    self.productService.updateQuantityPrice();
+    setTimeout(() => { self.productService.pushCartToFirebase(newdate, 
+                                                              self.productService.total_price, 
+                                                              self.productService.total_quantity);  }, 2000);
+    
+    
+    console.log("Logging the total price");
+    console.log(self.productService.total_price);
+    console.log(self.productService.total_quantity);
+    this.router.navigate(["tabs/product-list"]);
+
+               
+
   }
 
 }

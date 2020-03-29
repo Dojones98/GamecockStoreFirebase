@@ -28,6 +28,16 @@ const routes: Routes = [
         ]
       },
       {
+        path: 'order-list-final',
+        children: [
+          {
+            path: '',
+            loadChildren: () =>
+              import('../order-list-final/order-list-final.module').then(m => m.OrderListFinalPageModule)
+          }
+        ]
+      },
+      {
         path: '',
         redirectTo: '/tabs/product-list',
         pathMatch: 'full'

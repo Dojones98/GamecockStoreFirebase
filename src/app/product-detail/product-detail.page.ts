@@ -35,10 +35,6 @@ export class ProductDetailPage implements OnInit {
       param => {
         this.current_product = param;
         console.log(this.current_product);
-
-       // this.edit_item_form.patchValue({title:this.current_item.title});
-       // this.edit_item_form.patchValue({description:this.current_item.description});
-
       });
     }
     
@@ -46,7 +42,7 @@ export class ProductDetailPage implements OnInit {
       
 
 
-  order() {
+  addToCart() {
     let dateObj = new Date();
     var month = dateObj.getUTCMonth() + 1; //months from 1-12
     var day = dateObj.getUTCDate();

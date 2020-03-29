@@ -37,6 +37,10 @@ const routes: Routes = [
   {
     path: 'order-list-final',
     loadChildren: () => import('./order-list-final/order-list-final.module').then( m => m.OrderListFinalPageModule)
+  },
+  {
+    path: 'order-detail-final',
+    loadChildren: () => import('./order-detail-final/order-detail-final.module').then( m => m.OrderDetailFinalPageModule)
   }
 ];
 @NgModule({

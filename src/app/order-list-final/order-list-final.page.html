@@ -10,9 +10,14 @@
 
 <ion-content>
   <ion-list>
-    <ion-item *ngFor="let order of (cart | async)">
+    <ion-item *ngFor="let order of (cart | async)" (click) = "goToCart(order)">
     <ion-grid>
       <ion-row>
+        <ion-col align-self: center>
+          <div><h1>
+           OrderID: {{order.cart_id}}
+          </h1></div>
+        </ion-col>
         <ion-col align-self: center>
           <div><h1>
            Quantity: {{order.total_quantity}}

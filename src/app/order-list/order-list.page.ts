@@ -5,6 +5,19 @@ import { ChangeDetectorRef } from '@angular/core';
 
 import * as firebase from 'firebase';
 
+
+function makeid(length) {
+  var result           = '';
+  var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var charactersLength = characters.length;
+  for ( var i = 0; i < length; i++ ) {
+     result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
+
+
+
 @Component({
   selector: 'app-order-list',
   templateUrl: './order-list.page.html',
@@ -47,6 +60,8 @@ orders = [];
   	this.router.navigate(["/order-detail", order]);
   }
 
+  
+
   order(){
     var self = this;
     var total = 0;
@@ -63,9 +78,13 @@ orders = [];
     //self.productService.total_price = 0;
     //self.productService.total_quantity = 0;
     self.productService.updateQuantityPrice();
-    setTimeout(() => { self.productService.pushCartToFirebase(newdate, 
+    setTimeout(() => { self.productService.pushCartToFirebase(makeid(5), newdate, 
                                                               self.productService.total_price, 
-                                                              self.productService.total_quantity);  }, 2000);
+                                                              self.productService.total_quantity,
+                                                              self.productService.products_string,
+                                                              self.productService.quantities_string,
+                                                              self.productService.prices_string
+                                                              );  }, 2000);
     
     
     console.log("Logging the total price");

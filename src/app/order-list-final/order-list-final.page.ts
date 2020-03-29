@@ -39,9 +39,12 @@ export class OrderListFinalPage implements OnInit {
         }
       });
 
+    
+  }
 
-
-
+  goToCart(cart){
+    console.log(cart);
+    this.router.navigate(["/order-detail-final", cart]);
   }
 
   ngOnInit() {

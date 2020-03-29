@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title> Shopping Cart Detail </ion-title>
+    <ion-title> Order Details</ion-title>
         <ion-buttons slot = "start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
@@ -13,20 +13,22 @@
 <ion-content>
   <ion-list>
     <ion-item>
-      Product: {{ order.productName }}
+      Order ID : {{ cart.cart_id }}
    </ion-item>
     <ion-item>
-       UID: {{ order.uid }}
+     Products: {{cart.products_string}}
     </ion-item>
     <ion-item>
-       # Items: {{ order.numItems }}
+       Total Quantity: {{ cart.total_quantity }}
     </ion-item>
     <ion-item>
-       Total: ${{ order.total }}
+       Price: ${{ cart.total_price}}
     </ion-item>
     <ion-item>
-     
+       UID: {{ cart.uid }}
+    </ion-item>
+    <ion-item>
+       Date: {{ cart.orderDate }}
     </ion-item>
   </ion-list>
 </ion-content>
-

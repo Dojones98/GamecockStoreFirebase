@@ -25,8 +25,8 @@ export class ProductService {
   public cart:Array<any> = [];
   public total_quantity;
   public total_price;
-  public prices_string = "";
-  public quantities_string = "";
+  public prices_string = [];
+  public quantities_string = [];
   public products_string = "";
 
   user = null;
@@ -102,7 +102,8 @@ export class ProductService {
           querySnapshot.forEach(function(doc) {
            var cart = doc.data();
            self.cart.push({total_price:cart.total_price, total_quantity:
-            cart.total_quantity ,orderDate:cart.orderDate, id:doc.id,uid:cart.uid})
+            cart.total_quantity ,orderDate:cart.orderDate, id:doc.id,uid:cart.uid, prices_string:cart.prices_string,
+            quantities_string:cart.quantities_string, products_string:cart.products_string, cart_id:cart.cart_id})
   
        });
         
@@ -234,7 +235,8 @@ export class ProductService {
            querySnapshot.forEach(function(doc) {
             var cart = doc.data();
             self.cart.push({total_price:cart.total_price, total_quantity:
-             cart.total_quantity ,orderDate:cart.orderDate, id:doc.id,uid:cart.uid})
+              cart.total_quantity ,orderDate:cart.orderDate, id:doc.id,uid:cart.uid, prices_string:cart.prices_string,
+              quantities_string:cart.quantities_string, products_string:cart.products_string, cart_id:cart.cart_id})
 
         });
          
@@ -372,6 +374,9 @@ updateQuantityPrice(){
   var uid=firebase.auth().currentUser.uid
   self.total_price = 0;
   self.total_quantity = 0;
+  self.prices_string = [];
+  self.products_string = "";
+  self. quantities_string = [];
   this.db.collection("orders").where("uid", "==", firebase.auth().currentUser.uid)
   .onSnapshot(function(querySnapshot){
    querySnapshot.forEach(function(doc) {
@@ -379,6 +384,9 @@ updateQuantityPrice(){
        // console.log(doc.id)
       self.updateTotalPrice(order.total);
       self.updateTotalQuantity(order.numItems);
+      self.updatePriceString(String(order.total));
+      self.updateQuantitiesString(String(order.numItems));
+      self.updateProductsString(String(order.productName));
    });
    
    
@@ -393,6 +401,17 @@ updateQuantityPrice(){
 });
 
 }
+updatePriceString(string) {
+  this.prices_string.push(string);
+}
+
+updateQuantitiesString(string) {
+  this.quantities_string.push(string);
+}
+
+updateProductsString(string) {
+  this.products_string = string + ", " + this.products_string;
+}
 
 updateTotalPrice(toAdd) {
   this.total_price += <number>toAdd;
@@ -404,7 +423,7 @@ updateTotalQuantity(toAdd) {
   this.total_quantity += <number>toAdd;
 }
 
-pushCartToFirebase(orderDate, totalPrice, totalQuantity) {
+pushCartToFirebase(cart_id,orderDate, totalPrice, totalQuantity, products_string, quantities_string, prices_string) {
   var self = this;
   var uid=firebase.auth().currentUser.uid
     console.log(uid, " :****** uid");
@@ -414,7 +433,12 @@ pushCartToFirebase(orderDate, totalPrice, totalQuantity) {
    'total_price' : totalPrice,
    'total_quantity' : totalQuantity,
    'orderDate': orderDate,
-   'uid' : uid
+   'quantities_string' : quantities_string,
+   'price_string' : prices_string,
+   'products_string' : products_string,
+   'uid' : uid,
+   'cart_id' : cart_id
+
 })
 .then(function(docRef) {
  console.log("Document written with ID: ", docRef.id);
@@ -472,6 +496,23 @@ deleteOrder(id){
   }
 
 
+}
+
+deleteOrderFinal(id) {
+  if(this.usertype == "visitor") {
+    var self=this;
+    var db = firebase.firestore();
+
+    db.collection("cart").doc(id).delete().then(function() {
+        console.log("Document successfully deleted!");
+        console.log("Order deleted:"+id)
+        self.router.navigate(["/tabs/product-list"]);
+    }).catch(function(error) {
+        console.error("Error removing document: ", error);
+    });
+} else {
+  // YOU ARE NOT A VISITOR AND CANNOT DELETE AN ORDER
+}
 }
 
 async presentNotVisitor() {

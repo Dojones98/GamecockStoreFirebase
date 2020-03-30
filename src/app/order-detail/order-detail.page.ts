@@ -43,7 +43,7 @@ export class OrderDetailPage implements OnInit {
   async deleteOrderHelper() {
     let alertConfirm = await this.atrCtrl.create({
      
-      message: 'Are you sure you want to delete this order?',
+      message: 'Are you sure you want to delete this item from the cart?',
       buttons: [
         {
           text: 'No',

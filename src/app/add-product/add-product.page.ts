@@ -63,13 +63,18 @@ export class AddProductPage implements OnInit {
 
       if(self.picture_taken){
         storageRef.child(this.randomId).getDownloadURL().then(function(url) {
-          self.productService.addProduct(value.name, value.price, value.category, url, value.description);
+          var url2 = url;
+          url2.replace(self.randomId, "thumb_"+ self.randomId);
+          self.productService.addProduct(value.name, value.price, value.category, url, value.description, url2);
           self.picture_taken = false;
          });
+      
+
+         
         }
 
       if(!self.picture_taken){
-        self.productService.addProduct(value.name, value.price, value.category, value.photoUrl, value.description);
+        self.productService.addProduct(value.name, value.price, value.category, value.photoUrl, value.description, "");
       }
 
      self.goBack();

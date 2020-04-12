@@ -70,9 +70,8 @@ export class ProductListPage implements OnInit {
   }
 
   goToProduct(product){
-  	console.log(product);
-  	this.router.navigate(["/product-detail", product]);
-
+    this.router.navigate(["/product-detail", product]);
+    //this.router.navigate(['/update-product', product]);
   }
 
   openAddProductPage(){

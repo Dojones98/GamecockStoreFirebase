@@ -59,7 +59,7 @@ export class ProductService {
                  var product = doc.data();
                  // console.log(doc.id)
                  self.products.push({name:product.name, price:
-                 product.price ,category:product.category, photoUrl:product.photoUrl, description:product.description, id:doc.id,uid:product.uid})
+                 product.price ,category:product.category, photoUrl:product.photoUrl, description:product.description, id:doc.id,uid:product.uid, thumbnail:product.thumbnail})
              });
               //self.events.publish('dataloaded,Date.now());
  
@@ -130,7 +130,7 @@ export class ProductService {
              querySnapshot.forEach(function(doc) {
                  var product = doc.data();
                  self.products.push({name:product.name, price:
-                  product.price ,category:product.category, photoUrl:product.photoUrl, description:product.description, id:doc.id,uid:product.uid})
+                  product.price ,category:product.category, photoUrl:product.photoUrl, description:product.description, id:doc.id,uid:product.uid, thumbnail:product.thumbnail})
              });
  
              self.publishEvent({
@@ -172,7 +172,7 @@ export class ProductService {
               querySnapshot.forEach(function(doc) {
                   var product = doc.data();
                   self.products.push({name:product.name, price:
-                    product.price ,category:product.category, photoUrl:product.photoUrl, description:product.description, id:doc.id,uid:product.uid})
+                    product.price ,category:product.category, photoUrl:product.photoUrl, description:product.description, id:doc.id,uid:product.uid, thumbnail:product.thumbnail})
               });
                //self.events.publish('dataloaded',Date.now());
               self.publishEvent({
@@ -193,7 +193,7 @@ export class ProductService {
               querySnapshot.forEach(function(doc) {
                   var product = doc.data();
                   self.products.push({name:product.name, price:
-                    product.price ,category:product.category, photoUrl:product.photoUrl, description:product.description, id:doc.id,uid:product.uid})
+                    product.price ,category:product.category, photoUrl:product.photoUrl, description:product.description, id:doc.id,uid:product.uid, thumbnail:product.thumbnail})
               });
                //self.events.publish('dataloaded',Date.now());
               self.publishEvent({
@@ -292,7 +292,7 @@ return productsObservable;
 
   }
 
-  addProduct(name, price, category, photoUrl, description){
+  addProduct(name, price, category, photoUrl, description, thumb){
     var self = this;
     var uid = null;
     if (firebase.auth().currentUser !=  null){
@@ -310,7 +310,8 @@ return productsObservable;
            'price': price,
            'category': category,
            'photoUrl': photoUrl,
-           'description' : description
+           'description' : description,
+           'thumbnail' : thumb
      })
      .then(function(docRef) {
          console.log("Document written with ID: ", docRef.id);
@@ -460,6 +461,11 @@ getCart():any{var cartObservable = new Observable(observer => {
   });
 
       return cartObservable;
+}
+
+updateProduct(id, newValues){
+  console.log(newValues.id);
+firebase.firestore().collection("products").doc(id).update(newValues);
 }
 
 deleteProduct(id){

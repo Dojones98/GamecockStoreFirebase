@@ -18,6 +18,7 @@ export class ProductDetailPage implements OnInit {
   //add_order_form: FormGroup;
   current_product = null;
   total:any;
+  isOwner = false;
 
   constructor(private route: ActivatedRoute, 
               private router: Router,
@@ -37,6 +38,7 @@ export class ProductDetailPage implements OnInit {
         console.log(this.current_product);
       });
     }
+  
     
 
       
@@ -76,6 +78,17 @@ export class ProductDetailPage implements OnInit {
     }
   }
 
+  updateProduct(product){
+    var self = this;
+    if(this.productService.usertype != "owner") {
+      this.updateAlert();
+    } else {
+    
+    console.log("Trying to navigate to update-product with " + product);
+    this.router.navigate(['/update-product', product]);
+    }
+  }
+
   goBack(){
     this.router.navigate(['tabs/product-list']);
   }
@@ -101,6 +114,18 @@ export class ProductDetailPage implements OnInit {
       ]
     });
     await alertConfirm.present();
+  }
+
+  async updateAlert() {
+    let alert = await this.alertCtrl.create({
+      message: 'Sorry, only owners can update a product. Please log in as an owner to delete your product.',
+      buttons: [{
+        text: 'Dismiss',
+        handler: () => {
+          console.log('No clicked');
+        }}]
+    });
+    await alert.present();
   }
 
   async deleteAlert() {

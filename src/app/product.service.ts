@@ -262,7 +262,7 @@ export class ProductService {
           querySnapshot.forEach(function(doc) {
               var product = doc.data();
               self.products.push({name:product.name, price:
-                product.price ,category:product.category, photoUrl:product.photoUrl, description:product.description, id:doc.id, uid:product.uid })
+                product.price ,category:product.category, photoUrl:product.photoUrl, description:product.description, id:doc.id, uid:product.uid, thumbnail:product.thumbnail })
           });
           // self.events.publish('dataloaded',Date.now());
           self.publishEvent({

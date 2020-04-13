@@ -74,7 +74,7 @@ export class AddProductPage implements OnInit {
         }
 
       if(!self.picture_taken){
-        self.productService.addProduct(value.name, value.price, value.category, value.photoUrl, value.description, "");
+        self.productService.addProduct(value.name, value.price, value.category, value.photoUrl, value.description, value.photoUrl);
       }
 
      self.goBack();
